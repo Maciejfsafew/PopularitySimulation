@@ -7,8 +7,10 @@ from code.datamodel import Category
 
 
 class Person(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
+    def __init__(self, env):
+        self.env = env
+        self.action = env.process(self.run())
+
         self.id = uuid.uuid1()
         self.person_name = ""
 
@@ -26,11 +28,11 @@ class Person(threading.Thread):
 
     def run(self):
         while True:
-            sleep(random.expovariate(1.0 / self.watch_frequency))
             propositions = self.application.get_propositions()
             chosen = self.choose(propositions)
             self.application.choose(chosen)
-            print str(self) + " watch " + str(chosen)
+            print 'Time %d %s watch %s' % (self.env.now, str(self), str(chosen))
+            yield self.env.timeout(1.0 / self.watch_frequency)
 
     def choose(self, propositions):
         max_score = 0

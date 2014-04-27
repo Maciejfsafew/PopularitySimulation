@@ -6,7 +6,7 @@ from code.datamodel.Person import Person
 
 class PersonGenerator(object):
     def generate_person(self):
-        result = Person()
+        result = Person(self.env)
         result.person_name = random.choice(self.first_names) + " " + random.choice(self.last_names)
         result.interests = PersonGenerator._generate_interests()
         result.longitude = random.random() * 360.0 - 180.0
@@ -34,7 +34,8 @@ class PersonGenerator(object):
             result[category] = val
         return result
 
-    def __init__(self):
+    def __init__(self,env):
+        self.env = env
         self.first_names = ["Abigail", "Alexandra", "Alison", "Amanda", "Amelia", "Amy", "Andrea", "Angela",
                             "Anna", "Anne", "Audrey", "Ava", "Bella", "Bernadette", "Carol", "Caroline", "Carolyn",
                             "Chloe", "Claire", "Deirdre", "Diana", "Diane", "Donna", "Dorothy", "Elizabeth", "Ella",
