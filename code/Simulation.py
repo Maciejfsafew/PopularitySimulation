@@ -1,7 +1,9 @@
 #!/usr/bin/python
+import simpy
+
 from code.application.Application import Application
 from code.generator.PersonGenerator import PersonGenerator
-import simpy
+
 
 PERSONS = 1
 
@@ -17,7 +19,6 @@ def simulation():
     for i in xrange(0, PERSONS):
         person = generator.generate_person()
         person.set_application(application)
-
 
     env.run(until=100)
 
