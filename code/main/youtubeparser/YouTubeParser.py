@@ -5,7 +5,7 @@ import math
 
 from bs4 import BeautifulSoup
 
-from code.datamodel import Category
+from code.main.datamodel import Category
 
 
 __author__ = 'mjjaniec'
@@ -17,7 +17,8 @@ url = "https://www.youtube.com/results?search_query="
 
 max_hits = 10000000000
 
-if __name__ == "__main__":
+
+def main():
     while True:
         print "select category"
         i = 0
@@ -47,3 +48,7 @@ if __name__ == "__main__":
                       ", ContentGenerator._generate_categories(\"" + category + "\")),"
             except:
                 pass
+
+
+if __name__ == "__main__":
+    main()
