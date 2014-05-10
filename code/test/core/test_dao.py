@@ -1,8 +1,7 @@
 import unittest
 
-from code.main.datamodel.Category import Category
-from code.main.dao.ContentDao import ContentDao
-from code.main.datamodel.Content import Content
+from code.main.core.dao import ContentDao
+from code.main.core.datamodel import Content, categories
 
 
 __author__ = 'mjjaniec'
@@ -21,7 +20,7 @@ class TestContentDao(unittest.TestCase):
 
     def test_dao(self):
         self.dao.remove_all()
-        c1 = Content(_id="ala", name="ala", quality=0.2, categories={Category[1]: 0.8, Category[4]: 0.2})
+        c1 = Content(name="ala", quality=0.2, categories={categories[1]: 0.8, categories[4]: 0.2})
         self.dao.put(c1)
         results = self.dao.find({"_id": "ala"})
         self.assertEqual(results.count(), 1)

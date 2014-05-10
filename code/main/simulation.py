@@ -1,25 +1,18 @@
 #!/usr/bin/python
 import simpy
 
-from code.main.dao.PersonDao import PersonDao
-from code.main.generator import PersonGenerator
-
+from code.main.core.application import Application
+from code.main.core.dao import ensure_valid_database_state
+from code.main.generator.person_generator import PersonGenerator
 
 PERSONS = 1
 
 CONTENTS = 10
 
 
-def ensure_valid_database_state(clear_database):
-    person_dao = PersonDao();
-    content_dao = ContentDao();
-    h
-    if clear_database
-
-
 def simulation():
     ensure_valid_database_state()
-    application = application()
+    application = Application()
     application.init(CONTENTS)
     env = simpy.Environment()
 
@@ -32,4 +25,4 @@ def simulation():
 
 
 if __name__ == "__main__":
-    simulation()
+    pass
