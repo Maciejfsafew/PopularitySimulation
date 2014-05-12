@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>Form</class>
+    <widget class="QWidget" name="mainWindow">
+        <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+                <widget class="QTabWidget" name="tabWidget">
+                    <widget class="QWidget" name="contents">
+                        <attribute name="title">
+                            <string>Contents</string>
+                        </attribute>
+                        <layout class="QVBoxLayout" name="verticalLayout_2">
+                            <item>
+                                <layout class="QHBoxLayout" name="horizontalLayout">
+                                    <item>
+                                        <widget class="QLineEdit" name="lineEdit"/>
+                                    </item>
+                                    <item>
+                                        <widget class="QPushButton" name="pushButton">
+                                            <property name="text">
+                                                <string>Search</string>
+                                            </property>
+                                        </widget>
+                                    </item>
+                                </layout>
+                            </item>
+                            <item>
+                                <widget class="QListWidget" name="listWidget"/>
+                            </item>
+                        </layout>
+                    </widget>
+                    <widget class="QWidget" name="tab_2">
+                        <attribute name="title">
+                            <string>Tab 2</string>
+                        </attribute>
+                    </widget>
+                </widget>
+            </item>
+        </layout>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>

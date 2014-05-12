@@ -1,11 +1,10 @@
-import os
 import subprocess
 import new
 
 import pymongo
 
+from code.main import commons
 from code.main.core.datamodel import Content, Person, Hit
-
 from code.main.generator.person_generator import PersonGenerator
 
 
@@ -30,14 +29,14 @@ class BaseDao(object):
         subprocess.call(["mongoexport",
                          "--db", self.database.name,
                          "--collection", self.collection.name,
-                         "--out", BaseDao.find_resources() + file_name])
+                         "--out", commons.get_resource_path(file_name)])
 
     def import_data(self, file_name):
         self.remove_all()
         subprocess.call(["mongoimport",
                          "--db", self.database.name,
                          "--collection", self.collection.name,
-                         "--file", BaseDao.find_resources() + file_name])
+                         "--file", commons.get_resource_path(file_name)])
 
     def remove_all(self):
         self.collection.remove()
@@ -62,14 +61,6 @@ class BaseDao(object):
         cursor.next = new.instancemethod(new_next, cursor)
         return cursor
 
-    @staticmethod
-    def find_resources():
-        directory = "."
-        for i in xrange(5):
-            for name in os.listdir(directory):
-                if name == "resources":
-                    return directory + "/resources/"
-            directory += "/.."
 
 
 class ContentDao(BaseDao):
