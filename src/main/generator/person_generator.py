@@ -1,12 +1,12 @@
 import random
 
-from code.main.core.datamodel import Person
-from code.main.core.datamodel import categories
+from src.main.core.datamodel import Person
+from src.main.core.datamodel import categories
 
 
 class PersonGenerator(object):
     def generate_person(self):
-        result = Person(self.env)
+        result = Person()
         result.person_name = random.choice(self.first_names) + " " + random.choice(self.last_names)
         result.interests = PersonGenerator._generate_interests()
         result.longitude = random.random() * 360.0 - 180.0

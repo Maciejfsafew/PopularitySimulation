@@ -1,7 +1,7 @@
 import unittest
 
-from code.main.core.dao import ContentDao
-from code.main.core.datamodel import Content, categories
+from src.main.core.dao import ContentDao
+from src.main.core.datamodel import Content, categories
 
 
 __author__ = 'mjjaniec'
@@ -14,9 +14,9 @@ class TestContentDao(unittest.TestCase):
     def test_one(self):
         x = Content("13")
         self.dao.put(x),
-        self.assertGreater(self.dao.find_all().count(), 0)
+        self.assertGreater(self.dao.find().count(), 0)
         self.dao.remove_all()
-        self.assertEqual(self.dao.find_all().count(), 0)
+        self.assertEqual(self.dao.find().count(), 0)
 
     def test_dao(self):
         self.dao.remove_all()

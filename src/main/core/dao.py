@@ -2,10 +2,11 @@ import subprocess
 import new
 
 import pymongo
+from pymongo.cursor import Cursor
 
-from code.main import commons
-from code.main.core.datamodel import Content, Person, Hit
-from code.main.generator.person_generator import PersonGenerator
+from src.main import commons
+from src.main.core.datamodel import Content, Person, Hit
+from src.main.generator.person_generator import PersonGenerator
 
 
 __author__ = 'mjjaniec'
@@ -41,26 +42,23 @@ class BaseDao(object):
     def remove_all(self):
         self.collection.remove()
 
-    def find_all(self):
-        return self.collection.find()
-
     def put(self, entry):
         self.collection.update({"_id": entry._id}, entry.__dict__, upsert=True)
 
     def find(self, query=None):
-        cursor = self.collection.find(query)
-        clazz = self.clazz
+        class SmartCursor(Cursor):
+            def __init__(self, ordinary_cursor, clazz):
+                self.__dict__ = ordinary_cursor.__dict__
+                self.clazz = clazz
+                self.ordinary_cursor = ordinary_cursor
 
-        def new_next(cursors_self):
-            raw = cursors_self._old_next()
-            result = new.instance(clazz)
-            result.__dict__ = raw
-            return result
+            def next(self):
+                raw = self.ordinary_cursor.next()
+                result = new.instance(self.clazz)
+                result.__dict__ = raw
+                return result
 
-        cursor._old_next = cursor.next
-        cursor.next = new.instancemethod(new_next, cursor)
-        return cursor
-
+        return SmartCursor(self.collection.find(query), self.clazz)
 
 
 class ContentDao(BaseDao):
@@ -75,6 +73,17 @@ class PersonDao(BaseDao):
 
     def __init__(self, use_test=False):
         BaseDao.__init__(self, Person, PersonDao.collection_name, use_test)
+
+    #Override
+    def put(self, entry):
+        dictionary = {
+            "_id": entry._id,
+            "person_name": entry.person_name,
+            "interests": entry.interests,
+            "watch_frequency": entry.watch_frequency,
+            "hits": entry.hits,
+        }
+        self.collection.update({"_id": entry._id}, dictionary, upsert=True)
 
 
 class HitDao(BaseDao):
@@ -94,15 +103,15 @@ def ensure_valid_database_state(clear_database=True, min_persons=100, min_conten
         person_dao.remove_all()
         hit_dao.remove_all()
 
-    persons_count = person_dao.find_all().count()
+    persons_count = person_dao.find().count()
     if persons_count < min_persons:
         person_gen = PersonGenerator(None)
         while persons_count < min_persons:
             person_dao.put(person_gen.generate_person())
             persons_count += 1
 
-    if content_dao.find_all().count() < min_content:
+    if content_dao.find().count() < min_content:
         content_dao.import_data("contents.json")
-    if content_dao.find_all().count() < min_content:
+    if content_dao.find().count() < min_content:
         print "not enough data gathered, use you_tube_content_generator to generate new content"
         exit(0)

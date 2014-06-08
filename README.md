@@ -16,6 +16,10 @@ but still it is not trivial
     sudo ln -s /usr/local/lib/python2.7/dist-packages/PySide/libshiboken-python2.7.so.1.2.2 /usr/lib/libshiboken-python2.7.so.1.2.2
     sudo sed -i "1 c__all__ = ['QtUiTools', 'QtCore', 'QtGui', 'QtNetwork', 'QtOpenGL', 'QtSql', 'QtSvg', 'QtTest', 'QtWebKit', 'QtScript']" /usr/local/lib/python2.7/dist-packages/PySide/__init__.py
 
+    #charts
+    sudo apt-get install libxml2-dev libxslt1-dev python-dev
+    sudo pip install pygal
+
 database:
 
     #database itself

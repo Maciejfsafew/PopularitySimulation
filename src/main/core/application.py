@@ -1,24 +1,20 @@
 import random
 
-from code.main.core.dao import ContentDao
+from src.main.core.dao import HitDao
+from src.main.core.datamodel import Hit
 
 
 __author__ = 'mjjaniec'
 
 
 class Application(object):
-    def init(self, number_of_contents):
-        self.contents = []
-        cursor = ContentDao().find_all()
-        while True:
-            content = cursor.next()
-            if content is None:
-                break
-            self.contents.append(content)
-
     def __init__(self):
         self.contents = {}
         self.all_hits = 0
+        self.hits_dao = HitDao()
+
+    def init(self, contents):
+        self.contents = {content: 0 for content in contents}
 
     def get_propositions(self):
         result = []
@@ -33,8 +29,10 @@ class Application(object):
                 break
         return result
 
-    def choose(self, chosen_content):
+    def choose(self, user, chosen_content, when):
         chosen_content.hits += 1
+        #should use ID, but who cares
+        self.hits_dao.put(Hit(user.person_name, chosen_content.name, when))
         self.all_hits += 1
         self.contents[chosen_content] += 1
 

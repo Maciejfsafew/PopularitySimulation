@@ -6,8 +6,8 @@ import math
 
 from bs4 import BeautifulSoup
 
-from code.main.core import datamodel
-from code.main.core.dao import ContentDao
+from src.main.core import datamodel
+from src.main.core.dao import ContentDao
 
 
 __author__ = 'mjjaniec'
@@ -58,7 +58,7 @@ def generate_categories(hints):
 
 
 def print_menu():
-    count = dao.find_all().count()
+    count = dao.find().count()
     print "\n\nThere is {0} entries in database. ".format(count)
     print "   [1] import dumped data"
     print "   [2] download data from YouTube"
@@ -106,7 +106,7 @@ def download():
         try:
             title = tag.find_all("a", class_=title_style)
             title = title[0][title_attribute]
-            title = title.encode('ascii', errors='ignore')
+            title = title.ensrc('ascii', errors='ignore')
 
             hits = tag.find_all("li")
             hits = "".join(re.findall(r"\d+", hits[2].text))

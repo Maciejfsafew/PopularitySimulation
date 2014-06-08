@@ -1,5 +1,4 @@
 import random
-import threading
 import uuid
 
 categories = [
@@ -54,13 +53,8 @@ class Content:
         return str(self)
 
 
-class Person(threading.Thread):
-    def __init__(self, env):
-        threading.Thread.__init__(self)
-        self.env = env
-        if env:
-            self.action = env.process(self.run())
-
+class Person:
+    def __init__(self):
         self._id = str(uuid.uuid1())
         self.person_name = ""
 
@@ -68,24 +62,30 @@ class Person(threading.Thread):
         self.latitude = 0
         self.interests = {}
         self.watch_frequency = 0
+        self.hits = 0
 
         self.friends = []
         self.contents = {}
+        self.env = None
+        self.action = None
         self.application = None
 
-    def set_application(self, application):
+    def init(self, env, application):
+        self.env = env
         self.application = application
+        self.action = env.process(self.run())
+        return self
 
     def run(self):
         while True:
             propositions = self.application.get_propositions()
             chosen = self.choose(propositions)
-            self.application.choose(chosen)
-            print 'Time %d %s watch %s' % (self.env.now, str(self), str(chosen))
+            self.hits += 1
+            self.application.choose(self, chosen, self.env.now)
             yield self.env.timeout(1.0 / self.watch_frequency)
 
     def choose(self, propositions):
-        max_score = 0
+        max_score = -100.0
         chosen = None
         for proposition in propositions:
             score = proposition.quality * categories_match(self.interests, proposition.categories) * \
@@ -104,7 +104,7 @@ class Person(threading.Thread):
         return str(self)
 
 
-class Hit(object):
+class Hit:
     def __init__(self, who, what, when):
         self._id = str(uuid.uuid1())
         self.who = who
