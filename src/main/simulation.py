@@ -4,8 +4,8 @@ import simpy
 from src.main.core.application import Application
 from src.main.core.dao import ensure_valid_database_state, PersonDao, ContentDao
 
-PERSONS = 10
-CONTENTS = 10
+PERSONS = 30
+CONTENTS = 60
 
 
 def simulation():
@@ -17,6 +17,9 @@ def simulation():
     person_dao = PersonDao()
     contents = [content for content in content_dao.find().limit(CONTENTS)]
     persons = [person.init(env, application) for person in person_dao.find().limit(PERSONS)]
+
+    for person in persons:
+        person.add_contacts(persons)
 
     application.init(contents)
     print "starting simulation..."

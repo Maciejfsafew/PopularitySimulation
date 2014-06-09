@@ -12,6 +12,7 @@ class PersonGenerator(object):
         result.longitude = random.random() * 360.0 - 180.0
         result.latitude = random.random() * 180.0 - 90.0
         result.watch_frequency = random.expovariate(1)
+        result.variability = random.expovariate(1)
         return result
 
     @staticmethod
@@ -32,6 +33,10 @@ class PersonGenerator(object):
                 if not category in result:
                     break
             result[category] = val
+
+        for cat in categories:
+            if cat not in result:
+                result[cat] = 0
         return result
 
     def __init__(self, env):

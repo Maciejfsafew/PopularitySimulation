@@ -76,12 +76,17 @@ class PersonDao(BaseDao):
 
     #Override
     def put(self, entry):
+        friends = [friend.person_name for friend in entry.friends]
         dictionary = {
             "_id": entry._id,
             "person_name": entry.person_name,
             "interests": entry.interests,
             "watch_frequency": entry.watch_frequency,
             "hits": entry.hits,
+            "longitude": entry.longitude,
+            "latitude": entry.latitude,
+            "friends": friends,
+            "variability": entry.variability
         }
         self.collection.update({"_id": entry._id}, dictionary, upsert=True)
 

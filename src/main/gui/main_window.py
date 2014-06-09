@@ -199,7 +199,7 @@ class SearchableContentsTab(SearchableTab):
         view = QtSvg.QSvgWidget()
         view.setFixedSize(700, 600)
 
-        xy_chart = pygal.XY(style=LightGreenStyle, show_legend=False, show_dots=False, stroke=True, fill=False)
+        xy_chart = pygal.XY(style=LightGreenStyle, show_legend=False, show_dots=False, stroke=True, fill=True, zero=0)
         xy_chart.title = 'Hits in time'
         xy_chart.add('', data)
 
@@ -241,6 +241,14 @@ class SearchablePersonsTab(SearchableTab):
         show_watches = QtGui.QPushButton("Show watches")
         show_watches.clicked.connect(lambda: self.show_hits(person.person_name))
         layout.addWidget(show_watches, 1, 5)
+
+        layout.addWidget(QtGui.QLabel("Position:"), 2, 0)
+        layout.addWidget(QtGui.QLabel("[%.5g, %.5g]" % (person.longitude, person.latitude)), 2, 1, 1, 2)
+        layout.addWidget(QtGui.QLabel("Friends:"), 2, 3)
+        layout.addWidget(QtGui.QLabel(str(len(person.friends))), 2, 4)
+        show_friends = QtGui.QPushButton("Show friends")
+        show_friends.clicked.connect(lambda: self.show_friends(person.friends))
+        layout.addWidget(show_friends, 2, 5)
         layout.setColumnStretch(4, 1)
         left = QtGui.QWidget()
         left.setLayout(layout)
@@ -289,6 +297,24 @@ class SearchablePersonsTab(SearchableTab):
         for hit in dao.find({"who": name}).limit(1000).sort("when", -1):
             data_list.append((hit.what, hit.when))
         table_model = SimpleTableModel(self, data_list, headers)
+        table = QtGui.QTableView()
+        table.setModel(table_model)
+        table.setFixedSize(640, 300)
+        table.setColumnWidth(0, 500)
+        table.setColumnWidth(2, 80)
+        layout.addWidget(table)
+
+        self.popup.show()
+
+    def show_friends(self, friends):
+        self.popup = QtGui.QTableView()
+        self.popup.setGeometry(QtCore.QRect(100, 100, 680, 320))
+        layout = QtGui.QHBoxLayout()
+        self.popup.setLayout(layout)
+
+        friends = [[friend] for friend in friends]
+        headers = ["Name"]
+        table_model = SimpleTableModel(self, friends, headers)
         table = QtGui.QTableView()
         table.setModel(table_model)
         table.setFixedSize(640, 300)
